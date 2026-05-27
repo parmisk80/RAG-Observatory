@@ -1,6 +1,6 @@
 from fastapi import APIRouter , status , HTTPException
 from fastapi.responses import JSONResponse
-from models import RetrievalSearchRequest , RetrievalResult , RetrievalSearchResponse
+from models.models import RetrievalSearchRequest , RetrievalResult , RetrievalSearchResponse
 
 
 router = APIRouter(prefix='/api/v1/retrieval' , tags=['Retrieval'])

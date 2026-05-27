@@ -2,7 +2,7 @@ from fastapi import APIRouter , status , HTTPException , UploadFile , File , For
 from fastapi.responses import JSONResponse
 from pathlib import Path
 import shutil
-from models import DocumentMetadata , UploadResponse
+from models.models import DocumentMetadata , UploadResponse
 
 
 router = APIRouter(prefix='/api/v1/documents' , tags=['Documents'])
@@ -18,9 +18,9 @@ async def upload_document(file : UploadFile = File(...) , title : str = Form(...
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST , detail='Only PDF files are allowed.')
     
 
-file_path = upload_dir / file.filename
-with open(file_path , "wb") as buffer:
-    shutil.copyfileobj(file.file , buffer)
+    file_path = upload_dir / file.filename
+    with open(file_path , "wb") as buffer:
+        shutil.copyfileobj(file.file , buffer)
 
 
     metadata = DocumentMetadata(title = title , source = source , tags = ['rag' , 'ai'] , uploaded_by_user_id = "user_123")

@@ -1,9 +1,9 @@
 from fastapi import APIRouter , status , HTTPException
 from fastapi.responses import JSONResponse
-from models import MetricsResponse
+from models.models import MetricsResponse
 
 
-router = APIRouter(prefix='api/v1/metrics' , tags=['Metrics'])
+router = APIRouter(prefix='/api/v1/metrics' , tags=['Metrics'])
 
 @router.get("/metrics" , response_model=MetricsResponse)
 async def metrics_operations():

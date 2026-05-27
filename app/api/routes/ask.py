@@ -1,6 +1,6 @@
 from fastapi import APIRouter , status , HTTPException
 from fastapi.responses import JSONResponse
-from models import AskRequest , AskResponse
+from models.models import AskRequest , AskResponse
 
 
 router = APIRouter(prefix="/api/v1" , tags=["Ask"])
