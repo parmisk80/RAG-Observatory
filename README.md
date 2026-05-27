@@ -4,7 +4,7 @@
 A Modular and Observable Retrieval-Augmented Generation (RAG) System    
 Built with FastAPI, Docker, ChromaDB, PostgreSQL, Redis, Prometheus, Loki, and Grafana.
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Project Vision
 
@@ -30,19 +30,18 @@ This project combines and integrates concepts from multiple research areas:
 
 The result is a complete AI pipeline that allows visibility into every stage of Retrieval-Augmented Generation.
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # High-Level System Flow
 
 text User  → FastAPI REST API  →Pipeline Orchestrator  → Query Rewriting  → Embedding Generation  → Vector Retrieval  → LLM Generation  → RAGAS Evaluation  → Observability Layer  → Grafana Dashboards 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Core System Architecture
 
 text app/ ├── api/ │   └── routes/ │ ├── core/ │ ├── models/ │ ├── modules/ │   ├── ingestion/ │   ├── retrieval/ │   ├── generation/ │   ├── evaluation/ │   └── orchestration/ │ ├── infrastructure/ │   ├── logging/ │   ├── monitoring/ │   └── cache/ │ └── main.py 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 # Main Components
 
@@ -59,7 +58,7 @@ Responsibilities:
 \- API documentation  
 \- Middleware integration
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 2\. Pipeline Orchestrator
 
@@ -78,7 +77,7 @@ Pipeline Flow:
 
 text rewrite  → retrieval  → generation  → evaluation 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 3\. Query Rewriting Module
 
@@ -94,7 +93,7 @@ Example:
 
 text Original Query: "Tell me about Docker"  Rewritten Query: "What is Docker and how does containerization work?" 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 4\. Document Ingestion Pipeline
 
@@ -111,7 +110,7 @@ Supported Formats:
 \- Markdown  
 \- DOCX
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 5\. Chunking Strategy
 
@@ -127,7 +126,7 @@ Chunk Flow:
 
 text Large Document  ↓ Semantic Sections  ↓ Smaller Chunks  ↓ Embedding Generation 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 6\. Embedding System
 
@@ -143,7 +142,7 @@ Technology:
 
 \- Sentence Transformers
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 7\. Vector Database
 
@@ -159,7 +158,6 @@ Stored Data:
 
 text Chunk Text Embedding Vector Metadata Document References 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
 # 8\. Metadata Database
 
@@ -172,7 +170,7 @@ Responsibilities:
 \- Analytics metadata  
 \- System records
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # 9\. Cache Layer
 
@@ -190,7 +188,7 @@ Purpose:
 \- Reduce repeated computation  
 \- Improve performance
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # API Architecture
 
@@ -198,7 +196,7 @@ Main REST API Endpoints:
 
 text POST   /api/v1/ask POST   /api/v1/documents/upload POST   /api/v1/retrieval/search POST   /api/v1/evaluate GET    /api/v1/metrics GET    /health 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Stage Management
 
@@ -220,7 +218,7 @@ Stage States:
 
 text pending running completed failed skipped 
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Logging Architecture
 
@@ -239,7 +237,7 @@ Logged Information:
 \- Pipeline stages  
 \- Evaluation scores
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Monitoring Architecture
 
@@ -259,7 +257,7 @@ Monitored Metrics:
 \- Evaluation scores  
 \- System health
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Observability Stack
 
@@ -273,7 +271,7 @@ Components:
 | Prometheus | Metrics Collection |  
 | Loki | Log Aggregation |
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Background Task Processing
 
@@ -307,7 +305,7 @@ Technologies Used:
 - Redis (Message Broker)
 - FastAPI
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Docker Architecture
 
@@ -323,7 +321,7 @@ Docker Components:
 \- Docker Compose  
 \- Multi-service Architecture
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # System Design Principles
 
@@ -336,7 +334,7 @@ The project follows these engineering principles:
 \- Scalable Infrastructure  
 \- Production-inspired Engineering
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Future Improvements
 
@@ -351,7 +349,7 @@ Planned future extensions:
 \- Advanced Evaluation Pipelines  
 \- Semantic Routing  
 \- Memory Systems  
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Main Goal of the Project
 
@@ -366,7 +364,7 @@ This platform focuses not only on generating answers, but also on:
 \- Measuring hallucination  
 \- Building scalable AI infrastructure
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Technologies Used
 
@@ -382,7 +380,7 @@ This platform focuses not only on generating answers, but also on:
 | Containerization | Docker |  
 | Orchestration | Docker Compose |
 
-\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 
 # Project Summary
 
