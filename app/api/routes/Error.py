@@ -1,6 +1,6 @@
 from fastapi import APIRouter , status , HTTPException 
 from fastapi.responses import JSONResponse
-from models import ErrorResponse
+from models.models import ErrorResponse
 
 router = APIRouter(prefix='/api/v1/errors' , tags=['Errors'])
 
