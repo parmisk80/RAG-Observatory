@@ -275,6 +275,40 @@ Components:
 
 \_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
 
+# Background Task Processing
+
+The system uses Celery for asynchronous and distributed background task execution.
+
+Celery is responsible for handling long-running and resource-intensive operations outside the main API request cycle.
+
+Background Tasks Include:
+
+- Document ingestion
+- Embedding generation
+- RAG evaluation
+- Metrics aggregation
+- Scheduled monitoring jobs
+
+Task Flow:
+
+text FastAPI Request  ↓ Celery Task Queue  ↓ Worker Execution  ↓ Result Storage 
+
+Benefits of Celery Integration:
+
+- Non-blocking API responses
+- Improved scalability
+- Better resource management
+- Async document processing
+- Distributed task execution
+
+Technologies Used:
+
+- Celery
+- Redis (Message Broker)
+- FastAPI
+
+\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_\_
+
 # Docker Architecture
 
 The entire platform is containerized using Docker.
@@ -337,7 +371,7 @@ This platform focuses not only on generating answers, but also on:
 # Technologies Used
 
 | Category | Technology |  
-| Backend API | FastAPI |  
+| Backend API | FastAPI | Celery
 | Validation | Pydantic |  
 | Vector Database | ChromaDB |  
 | Relational Database | PostgreSQL |  
