@@ -40,7 +40,7 @@ text User  → FastAPI REST API  →Pipeline Orchestrator  → Query Rewriting  
 
 # Core System Architecture
 
-text app/ ├── api/ │   └── routes/ │ ├── core/ │ ├── models/ │ ├── modules/ │   ├── ingestion/ │   ├── retrieval/ │   ├── generation/ │   ├── evaluation/ │   └── orchestration/ │ ├── infrastructure/ │   ├── logging/ │   ├── monitoring/ │   └── cache/ │ └── main.py 
+text app/ api/ │  routes/ │  core/ │  models/ │  modules/ │   ingestion/ │  retrieval/ │   generation/ │   evaluation/ │   orchestration/ │ infrastructure/ │   logging/ │    monitoring/ │    cache/ │  main.py 
 
 
 # Main Components
