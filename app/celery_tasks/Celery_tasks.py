@@ -95,37 +95,7 @@ def process_document(self , document_id : str , file_path : str):
         
         try:
             ingestion = document_ingestion(document_id, file_path)
-            # logger.info(f"Starting pipeline for documnet : {document_id}")
-
-            # STEP 1 -> Pars PDF
-            # logger.info("Parsing PDF process...")
-            # raw_text = 
-            # raw_text = _parse_pdf(file_path)
-            # logger.info(f"Extracted {len(raw_text)} characters from PDF")
             
-
-            # # STEP 2 -> Clean Text
-            # logger.info("Cleaning Text...")
-            # clean_text = _cleaning_text(raw_text)
-
-
-            # # STEP 3 -> Chunk Text
-            # logger.info("Chunking Text...")
-            # chunk = _chunk_text(clean_text)
-            # logger.info(f"Created {len(chunk)} chunks")
-
-
-            # # STEP 4 -> Generate Embeddings
-            # logger.info("Generating embeddings via Ollama...")
-            # embeddings = _generate_embeddings(chunk)
-
-
-            # # STEP 5 -> Store in Chromadb
-            # logger.info("Storing vectors in Chromadb...")
-            # _store_in_chromadb(document_id , chunk , embeddings)
-
-            # logger.info(f"document {document_id} processed successfully.")
-            # return {"status": "completed", "document_id": document_id, "chunks": len(chunk)}
             return ingestion
         
 

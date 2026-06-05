@@ -1,0 +1,110 @@
+services:
+  logging:
+      driver: loki
+  rag-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8000"
+    restart: unless-stopped
+
+  celery_worker:
+    logging:
+      driver: loki
+    build: .
+    deploy:
+      mode: replicated
+      replicas: 1
+    command: celery -A celery_config:celery_app worker --loglevel=info --concurrency=1
+    depends_on:
+      - redis
+    restart: unless-stopped
+
+
+  redis:
+    logging:
+      driver: loki
+    image: redis:7-alpine
+    ports: #[]
+      - "6379:6379"
+    restart: unless-stopped
+  
+  chromadb:
+    logging:
+      driver: loki
+    image: chromadb/chroma
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+
+  flower:
+    image: mher/flower
+    command: celery --broker=redis://redis:6379/0 flower --port=5555
+    ports:
+      - "5555:5555"
+    environment:
+      - FLOWER_UNAUTHENTICATED_API=true
+    depends_on:
+      - redis
+      - celery_worker
+    restart: unless-stopped  
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+
+  loki:
+    image: grafana/loki:latest
+    container_name: loki
+    restart: unless-stopped
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./monitoring/loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - loki_data:/loki
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+      - loki
+
+volumes:
+  prometheus_data:
+  loki_data:
+  grafana_data:
+
+  ollama:
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://localhost:3100/loki/api/v1/push"
+    image: ollama/ollama
+    ports: 
+      -"11434:11434"  # Ollama API port
+      
+    environment:
+      
+      MODEL: "deepseek-coder:1.3b"
+
+    
+    volumes:
+      - ollama-data:/root/.ollama  # Persist models
+      - ./etc/entrypoint.sh:/entrypoint.sh
+    entrypoint: ["/entrypoint.sh"]
+    restart: unless-stopped

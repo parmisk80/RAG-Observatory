@@ -1,12 +1,12 @@
 FROM python:3.12-slim
 
-MAINTAINER Parmis 
-
 WORKDIR /app
 
 COPY requirements.txt . 
 
 RUN pip install --no-cache-dir -r requirements.txt
+
+COPY sample.env ./.env
 
 COPY app/ ./
 

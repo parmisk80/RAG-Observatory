@@ -37,7 +37,7 @@ class QueryRewriteService:
         for monitoring and observability.
         """
         def __init__(self):
-            self.model_name = settings.OLLAMA_LLM_MODEL
+            self.model_name = settings.OLLAMA_EMBED_MODEL
             self.base_url =  settings.OLLAMA_BASE_URL
             self._stats = {
                   

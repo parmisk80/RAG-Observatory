@@ -6,7 +6,7 @@ import re # text pattern.
 import redis
 import logging 
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from app.config.config import settings
+from config.config import settings
 
 
 logger = logging.getLogger(__name__)

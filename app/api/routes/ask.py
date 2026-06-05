@@ -13,7 +13,7 @@ async def ask_question(request : AskRequest):
 
 
 
-@router.get("answer/{task_id}" , response_model=AskResponse)
+@router.get("/answer/{task_id}" , response_model=AskResponse)
 async def get_answer(task_id : str):
     if task_id != 'Task_123':
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail='Task not found')

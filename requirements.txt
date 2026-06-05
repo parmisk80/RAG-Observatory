@@ -97,6 +97,7 @@ python-dateutil==2.9.0.post0
 python-dotenv==1.2.2
 python-multipart==0.0.29
 PyYAML==6.0.3
+psycopg2-binary==2.9.12
 redis==8.0.0
 referencing==0.37.0
 regex==2026.5.9
