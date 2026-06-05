@@ -13,7 +13,7 @@ celery_app = Celery(
     'RAG Observatory',
     broker="redis://localhost:6379/0",
     backend="redis://localhost:6379/0",
-    include=["celery_tasks.tasks"],
+    include=["celery_tasks.Celery_tasks"],
 )
 
 celery_app.conf.task_serializer = "json"
