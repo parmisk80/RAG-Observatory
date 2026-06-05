@@ -4,7 +4,7 @@ from pathlib import Path
 import random
 import shutil
 from models.models import DocumentMetadata , UploadResponse
-from celery_tasks.tasks import process_document
+from celery_tasks.Celery_tasks import process_document
 
 
 router = APIRouter(prefix='/api/v1/documents' , tags=['Documents'])
