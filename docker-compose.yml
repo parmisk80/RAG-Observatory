@@ -1,7 +1,9 @@
 services:
-  logging:
-      driver: loki
   rag-api:
+    logging:
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
     build:
       context: .
       dockerfile: Dockerfile
@@ -12,6 +14,8 @@ services:
   celery_worker:
     logging:
       driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
     build: .
     deploy:
       mode: replicated
@@ -23,16 +27,12 @@ services:
 
 
   redis:
-    logging:
-      driver: loki
     image: redis:7-alpine
     ports: #[]
       - "6379:6379"
     restart: unless-stopped
   
   chromadb:
-    logging:
-      driver: loki
     image: chromadb/chroma
     ports:
       - "8000:8000"
@@ -84,27 +84,36 @@ services:
       - prometheus
       - loki
 
-volumes:
-  prometheus_data:
-  loki_data:
-  grafana_data:
-
   ollama:
+    image: ollama/ollama
+    ports: 
+      - "11434:11434"  # Ollama API port   
+    environment:
+      MODEL: "deepseek-coder:1.3b"
+    volumes:
+      - ollama-data:/root/.ollama  # Persist models
+      - ./etc/:/etc
+
+    entrypoint: ["etc/entrypoint.sh"]
+
+  frontend:
     logging:
       driver: loki
       options:
-        loki-url: "http://localhost:3100/loki/api/v1/push"
-    image: ollama/ollama
-    ports: 
-      -"11434:11434"  # Ollama API port
-      
-    environment:
-      
-      MODEL: "deepseek-coder:1.3b"
-
-    
-    volumes:
-      - ollama-data:/root/.ollama  # Persist models
-      - ./etc/entrypoint.sh:/entrypoint.sh
-    entrypoint: ["/entrypoint.sh"]
+        loki-url: "http://loki:3100/loki/api/v1/push"
+    build:
+      context: ./frontend
+      dockerfile: DockerFile
     restart: unless-stopped
+    ports:
+      - "3001:3000"
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    depends_on:
+      - rag-api
+ 
+volumes:
+  ollama-data:
+  prometheus_data:
+  loki_data:
+  grafana_data:

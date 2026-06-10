@@ -1,0 +1,11 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: "rag-api"
+    static_configs:
+      - targets: ["rag-api:8000"]
+
+  - job_name: "celery"
+    static_configs:
+      - targets: ["celery_worker:8000"]
