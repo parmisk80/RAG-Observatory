@@ -107,6 +107,7 @@ rich==14.3.4
 rich-toolkit==0.19.10
 rignore==0.7.6
 rpds-py==2026.5.1
+sentence_transformers==5.5.1
 scikit-learn==1.7.2
 scipy==1.15.3
 sentry-sdk==2.60.0

@@ -39,6 +39,20 @@ services:
     restart: unless-stopped
 
 
+  
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB:-rag-api}
+      - POSTGRES_USER=${POSTGRES_USER:-rag-api}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-rag}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
   flower:
     image: mher/flower
     command: celery --broker=redis://redis:6379/0 flower --port=5555
@@ -62,15 +76,17 @@ services:
       - prometheus_data:/prometheus
 
   loki:
+
     image: grafana/loki:latest
     container_name: loki
     restart: unless-stopped
     ports:
       - "3100:3100"
-    command: -config.file=/etc/loki/local-config.yaml
+    command: -config.file=/etc/loki/loki.yaml
     volumes:
-      - ./monitoring/loki/loki-config.yaml:/etc/loki/local-config.yaml
+      - ./monitoring/loki:/etc/loki
       - loki_data:/loki
+
 
   grafana:
     image: grafana/grafana:latest
@@ -117,3 +133,4 @@ volumes:
   prometheus_data:
   loki_data:
   grafana_data:
+  postgres_data:

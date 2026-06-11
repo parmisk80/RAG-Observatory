@@ -11,8 +11,8 @@ logging.basicConfig(
 
 celery_app = Celery(
     'RAG Observatory',
-    broker="redis://localhost:6379/0",
-    backend="redis://localhost:6379/0",
+    broker="redis://redis:6379/0",
+    backend="redis://redis:6379/0",
     include=["celery_tasks.Celery_tasks"],
 )
 
