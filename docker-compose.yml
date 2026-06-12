@@ -1,9 +1,9 @@
 services:
   rag-api:
     logging:
-     driver: loki
-     options:
-     loki-url: "http://loki:3100/loki/api/v1/push"
+      driver: loki
+      options:
+        loki-url: "http://loki:3100/loki/api/v1/push"
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,9 +13,9 @@ services:
 
   celery_worker:
     logging:
-     driver: loki
-     options:
-     loki-url: "http://loki:3100/loki/api/v1/push"
+      driver: loki
+      options:
+          loki-url: "http://loki:3100/loki/api/v1/push"
     build: .
     deploy:
       mode: replicated
