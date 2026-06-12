@@ -1,9 +1,9 @@
 services:
   rag-api:
     logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
+     driver: loki
+     options:
+     loki-url: "http://loki:3100/loki/api/v1/push"
     build:
       context: .
       dockerfile: Dockerfile
@@ -13,9 +13,9 @@ services:
 
   celery_worker:
     logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
+     driver: loki
+     options:
+     loki-url: "http://loki:3100/loki/api/v1/push"
     build: .
     deploy:
       mode: replicated
@@ -44,9 +44,9 @@ services:
     image: postgres:17-alpine
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=${POSTGRES_DB:-rag-api}
-      - POSTGRES_USER=${POSTGRES_USER:-rag-api}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-rag}
+      - POSTGRES_DB=${POSTGRES_DB:-rag_db}
+      - POSTGRES_USER=${POSTGRES_USER:-postgres}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
     ports:
       - "5432:5432"
     volumes:
@@ -76,10 +76,8 @@ services:
       - prometheus_data:/prometheus
 
   loki:
-
     image: grafana/loki:latest
     container_name: loki
-    restart: unless-stopped
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/loki.yaml
@@ -124,7 +122,7 @@ services:
     ports:
       - "3001:3000"
     environment:
-      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      NEXT_PUBLIC_API_BASE_URL: http://rag-api:8080
     depends_on:
       - rag-api
  
