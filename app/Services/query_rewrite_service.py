@@ -2,7 +2,7 @@ import logging
 import ollama # call local models (with ollama API)
 import time # measuring latancy
 from typing import Optional
-from app.config.config import settings
+from config.config import settings
 
 
 logger = logging.getLogger(__name__)
@@ -114,13 +114,13 @@ class QueryRewriteService:
                      rewrite = self.fallback_query(query)
                      self._stats["fallback_used"] += 1
 
-                latency = (time.time() - start) * 1000 # * 1000 -> ms
-                self._update_stats(success=True, latency=latency)
+                latency_ms = (time.time() - start) * 1000 # * 1000 -> ms
+                self._update_stats(success=True, latency=latency_ms)
 
                 logger.info({
                 "stage":      "query_rewrite",
                 "status":     "success",
-                "latency_ms": round(latency, 2),
+                "latency_ms": round(latency_ms, 2),
                 "original":   query[:60],
                 "rewrite":    rewrite[:60],
             })
@@ -130,8 +130,8 @@ class QueryRewriteService:
               
               except Exception as exc:
                    
-                   latancy = (time.time() - start) * 1000
-                   self._update_stats(success=False, latency=latency)
+                latency_ms = (time.time() - start) * 1000
+                self._update_stats(success=False, latency=latency_ms)
 
 
               logger.error({
@@ -307,18 +307,17 @@ class QueryRewriteService:
         """
 
         def _update_stats(self, success: bool, latency: float):
-             
-             
-        
-             n = self._stats["total_rewrites"]
-             self._stats["total_rewrites"] += 1
-        
-             self._stats["avg_latency_ms"] = (
-            (self._stats["avg_latency_ms"] * n + latency) / (n + 1))
-             
+            n = self._stats["total_rewrites"]
 
-             if not success:
+            self._stats["total_rewrites"] += 1
 
+            # correct rolling average
+            self._stats["avg_latency_ms"] = (
+                (self._stats["avg_latency_ms"] * n + latency)
+                / (n + 1)
+            )
+
+            if not success:
                 self._stats["failed_rewrites"] += 1
 
 
