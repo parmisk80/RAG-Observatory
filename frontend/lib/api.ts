@@ -11,7 +11,8 @@ import type { Citation, DocItem } from "./types"
 // ---------------------------------------------------------------------------
 
 const USE_MOCK = false
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000"
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://rag-api:8000"
+const API_BASE_PREFIX = "api/v1"
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -99,10 +100,12 @@ export async function askQuestion(
 ): Promise<{ task_id: string; status: string }> {
 
   if (!USE_MOCK) {
-    const res = await fetch(`${API_BASE}/query/ask`, {
+    const res = await fetch(`${API_BASE}/${API_BASE_PREFIX}/ask`, {
       method:  "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ question }),
+      body:    JSON.stringify({ "user_id": "123",
+      "question": question,
+      "conversation_id": "123" }),
     })
     if (!res.ok) throw new Error(`askQuestion failed: ${res.status}`)
     return res.json()
@@ -121,7 +124,7 @@ export async function getAnswer(
 ): Promise<{ status: string; result?: AnswerResult }> {
 
   if (!USE_MOCK) {
-    const res = await fetch(`${API_BASE}/query/status/${taskId}`)
+    const res = await fetch(`${API_BASE}/${API_BASE_PREFIX}/answer/${taskId}`)
     if (!res.ok) throw new Error(`getAnswer failed: ${res.status}`)
 
     const data = await res.json()
@@ -196,7 +199,7 @@ export async function uploadDocument(
     const form = new FormData()
     form.append("file", file)
 
-    const res = await fetch(`${API_BASE}/documents/upload`, {
+    const res = await fetch(`${API_BASE}/${API_BASE_PREFIX}/documents/upload`, {
       method: "POST",
       body:   form,
     })
