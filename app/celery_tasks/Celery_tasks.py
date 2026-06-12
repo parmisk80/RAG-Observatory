@@ -237,7 +237,53 @@ def aggregate_metrics():
             "health":
                 evaluation_service.health_check()}}
 
+@celery_app.task(bind=True, max_retries=3)
+def ask_rag(
+    self,
+    question: str,
+    conversation_id: str | None = None,
+    run_evaluation: bool = False,
+    ground_truth: str | None = None,
+):
+    try:
+        logger.info(f"[ASK_RAG] question={question}")
 
+        # STEP 1: rewrite (direct call)
+        rewritten = rewrite_service.rewrite_query(question)
+
+        # STEP 2: retrieve (direct call)
+        contexts = retrieval_service.retrieve_context(query=rewritten)
+
+        # STEP 3: generate (direct call)
+        answer = generation_service.generate(
+            question=question,
+            contexts=contexts,
+        )
+
+        result = {
+            "question": question,
+            "rewritten_query": rewritten,
+            "contexts": contexts,
+            "answer": answer,
+            "conversation_id": conversation_id,
+        }
+
+        # STEP 4: optional eval
+        if run_evaluation and ground_truth:
+            result["evaluation"] = evaluation_service.generate_evaluation_report(
+                question=question,
+                answer=answer,
+                contexts=contexts,
+                ground_truth=ground_truth,
+                original_query=question,
+                rewritten_query=rewritten,
+            )
+
+        return result
+
+    except Exception as exc:
+        logger.error(f"[ASK_RAG FAILED] {exc}")
+        raise self.retry(exc=exc)
 
 # CLEANUP
 @celery_app.task
