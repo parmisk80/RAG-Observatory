@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes.ask import router as ask_router
 from api.routes.documents import router as documents_router
@@ -25,6 +26,12 @@ app.include_router(metrics_router)
 
 app.include_router(Error_router)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/health")
 async def health_check():
