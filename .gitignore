@@ -2,3 +2,7 @@ __pycache__
 *pycache*
 .env
 ragas/*
+node_modules
+.next
+uploaded_documents
+*.zip
