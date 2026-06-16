@@ -7,7 +7,7 @@ from typing import Optional
 from dataclasses import dataclass
 from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
-from app.config.config import settings
+from config.config import settings
 
 
 logger = logging.getLogger(__name__)
