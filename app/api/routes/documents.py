@@ -4,7 +4,7 @@ from pathlib import Path
 import random
 import shutil
 from models.models import DocumentMetadata , UploadResponse
-from celery_tasks.Celery_tasks import process_document
+from celery_tasks.Celery_tasks import process_document , celery_app
 
 
 router = APIRouter(prefix='/api/v1/documents' , tags=['Documents'])
@@ -27,8 +27,7 @@ async def upload_document(file : UploadFile = File(...) , title : str = Form(...
 
     result = process_document.delay(
         document_id=str(doc_id),
-        file_path=str(file_path)
-    )
+        file_path=str(file_path))
 
     metadata = DocumentMetadata(title = title , source = source , tags = ['rag' , 'ai'] , uploaded_by_user_id = "user_123")
 
