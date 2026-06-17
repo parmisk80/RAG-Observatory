@@ -17,7 +17,7 @@ class Settings(BaseSettings):
     LOG_LEVEL : str = "INFO"
 
     OLLAMA_EMBED_MODEL : str = "nomic-embed-text" 
-    OLLAMA_BASE_URL : str = "http://localhost:11434"
+    OLLAMA_BASE_URL : str = "http://ollama:11434"
     OLLAMA_REWRITE_MODEL : str = "llama3"
     OLLAMA_GENERATION_MODEL : str = "llama3"
 

@@ -59,8 +59,7 @@ class UploadResponse(BaseModel):
 # Request schema for semantic retrieval search
 class RetrievalSearchRequest(BaseModel):
     query : str
-    top_k : int = Field(default = 5 , ge = 1 , le = 20)   
-    user_id : str | int
+    top_k : int = Field(default = 5 , ge = 1 , le = 20) | None    
     document_id : str | None = None
 
 """Response"""
@@ -81,7 +80,8 @@ class RetrievalSearchResponse(BaseModel):
 class EvaluationRequest(BaseModel):
     question : str = Field(min_length = 3)
     generated_answer : str = Field(min_length = 3)
-    expected_answer : str = Field(min_length = 3)     
+    expected_answer : str = Field(min_length = 3) 
+    contexts : list[str] = []    
 
 
 """Response"""
@@ -94,7 +94,7 @@ class EvaluationResponse(BaseModel):
 
 """Response"""
 # Operational metrics for monitoring system performance
-class MetricsResponse(AskRequest):
+class MetricsResponse(BaseModel):
     total_request : int 
     total_documents : int 
     average_response_time : float

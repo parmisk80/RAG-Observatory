@@ -1,12 +1,34 @@
-from fastapi import APIRouter , status , HTTPException
-from fastapi.responses import JSONResponse
+from fastapi import APIRouter
 from models.models import MetricsResponse
-
+from celery_tasks.Celery_tasks import aggregate_metrics , celery_app
+from celery.result import AsyncResult
 
 router = APIRouter(prefix='/api/v1/metrics' , tags=['Metrics'])
 
-@router.get("/metrics" , response_model=MetricsResponse)
+@router.get("/metrics")
 async def metrics_operations():
-    response = MetricsResponse(total_request = 120, total_documents =35 , average_response_time =1.42 ,average_retrieval_time = 0.38)
 
-    return JSONResponse(status_code=status.HTTP_200_OK , content=response.model.dump())
+    task = aggregate_metrics.delay()
+    
+    return {"task_id" : task.id , "status" : "queued"}
+
+
+
+
+@router.get("/result/{task_id}")
+async def retrieval_result(task_id: str):
+
+    result = AsyncResult(task_id, app=celery_app)
+
+    if result.state in ("PENDING", "STARTED"):
+        return {"status": "processing"}
+
+    if result.state == "FAILURE":
+        return {"status": "failed"}
+
+    if result.state == "SUCCESS":
+        return {
+            "status": "completed",
+            "result": result.get()}
+
+    return {"status": "processing"}

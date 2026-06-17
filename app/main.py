@@ -6,7 +6,6 @@ from api.routes.documents import router as documents_router
 from api.routes.retrieval import router as retrieval_router
 from api.routes.evaluation import router as evaluation_router
 from api.routes.metrics import router as metrics_router
-from api.routes.Error import router as Error_router
 
 app = FastAPI(
     title="RAG Observatory API",
@@ -24,7 +23,6 @@ app.include_router(evaluation_router)
 
 app.include_router(metrics_router)
 
-app.include_router(Error_router)
 
 app.add_middleware(
     CORSMiddleware,
