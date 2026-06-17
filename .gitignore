@@ -6,4 +6,3 @@ node_modules
 .next
 uploaded_documents
 *.zip
-package-lock.json
