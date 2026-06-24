@@ -1,17 +1,22 @@
 services:
   rag-api:
-    logging:
-      driver: loki
-      options:
-        loki-url: "http://loki:3100/loki/api/v1/push"
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    # logging:
+    #   driver: loki
+    #   options:
+    #     loki-url: "http://loki:3100/loki/api/v1/push"
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8080:8000"
-    restart: unless-stopped
+    # restart: unless-stopped
+
 
   celery_worker:
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
     logging:
       driver: loki
       options:
@@ -20,7 +25,7 @@ services:
     deploy:
       mode: replicated
       replicas: 1
-    command: celery -A celery_config:celery_app worker --loglevel=info --concurrency=1
+    command: celery -A celery_tasks.Celery_tasks:celery_app worker --loglevel=info --concurrency=1
     depends_on:
       - redis
     restart: unless-stopped
@@ -102,13 +107,9 @@ services:
     image: ollama/ollama
     ports: 
       - "11434:11434"  # Ollama API port   
-    environment:
-      MODEL: "deepseek-coder:1.3b"
     volumes:
       - ollama-data:/root/.ollama  # Persist models
-      - ./etc/:/etc
-
-    entrypoint: ["etc/entrypoint.sh"]
+    restart: unless-stopped  
 
   frontend:
     logging:
