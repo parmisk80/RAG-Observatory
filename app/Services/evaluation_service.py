@@ -34,7 +34,7 @@ class EvaluationService:
     - Health monitoring
     """
     def __init__(self):
-        self.embed_model_name = settings.EVAL_EMBED_MODEL
+        self.embed_model_name = settings.OLLAMA_EMBED_MODEL
         self._stats = {
             "total_evaluations": 0,
             "failed_evaluations": 0,
