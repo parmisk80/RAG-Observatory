@@ -59,7 +59,7 @@ class UploadResponse(BaseModel):
 # Request schema for semantic retrieval search
 class RetrievalSearchRequest(BaseModel):
     query : str
-    top_k : int = Field(default = 5 , ge = 1 , le = 20) | None    
+    top_k : int = Field(default = 5 , ge = 1 , le = 20)  
     document_id : str | None = None
 
 """Response"""
