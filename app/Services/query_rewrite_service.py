@@ -1,5 +1,6 @@
 import logging
 import ollama # call local models (with ollama API)
+from groq import Groq
 import time # measuring latancy
 from typing import Optional
 from config.config import settings
@@ -37,8 +38,8 @@ class QueryRewriteService:
         for monitoring and observability.
         """
         def __init__(self):
-            self.model_name = settings.OLLAMA_EMBED_MODEL
-            self.base_url =  settings.OLLAMA_BASE_URL
+            self.client = Groq(api_key = settings.GROQ_API_KEY)
+            self.model_name =  settings.GROQ_MODEL
             self._stats = {
                   
                   "total_rewrites" : 0 , # counter of rewrites
@@ -105,9 +106,13 @@ class QueryRewriteService:
               try :
                     
                 prompt = self._build_prompt(query)
-                response = ollama.generate(model= self.model_name, prompt= prompt , options= {"temperature": 0.3, "num_predict": 50})
+                response = self.client.chat.completions.create(
+                model=self.model_name,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.3,
+                max_tokens=50)
 
-                rewrite = response["response"].strip()
+                rewrite = response.choices[0].message.content.strip()
 
                 if not self.validate_rewrite(query , rewrite) :
                      logger.warning(f"Invalid rewrite for query : '{query}' - using fallback ")
@@ -122,8 +127,7 @@ class QueryRewriteService:
                 "status":     "success",
                 "latency_ms": round(latency_ms, 2),
                 "original":   query[:60],
-                "rewrite":    rewrite[:60],
-            })
+                "rewrite":    rewrite[:60]})
                 
 
                 return rewrite
@@ -138,8 +142,7 @@ class QueryRewriteService:
                 "stage":   "query_rewrite",
                 "status":  "error",
                 "message": str(exc),
-                "query":   query[:60],
-            })
+                "query":   query[:60] })
 
               return self.fallback_query(query)
 
@@ -256,18 +259,19 @@ class QueryRewriteService:
         def health_check(self) -> dict:
 
             try:
-                response = ollama.generate( model = self.model_name , prompt  = "ping", options = {"num_predict": 1})
+                response = self.client.chat.completions.create(                     
+                    model=self.model_name,
+                    messages=[{"role": "user", "content": "ping"}],
+                    max_tokens=1 )
                 
-                return {"status": "healthy", "model": self.model_name}
+                return {"service" : "query_rewrite" , "status": "healthy", "model": self.model_name}
 
             except Exception as exc:
             
-                logger.error(f"Ollama health check failed: {exc}")
+                logger.error(f"Groq health check failed: {exc}")
                 return {"service" : "query_rewriter", 
                         "status": "unhealthy", 
-                        "model": self.model_name, 
-                        "error": str(exc),
-                        "ollama_url" : self.base_url}
+                        "error": str(exc) }
 
 
         """
