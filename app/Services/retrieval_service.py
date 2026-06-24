@@ -7,6 +7,7 @@ from typing import Optional
 from dataclasses import dataclass
 from rank_bm25 import BM25Okapi
 from sentence_transformers import CrossEncoder
+from Services.web_search_service import WebSearchService
 from config.config import settings
 
 
@@ -64,6 +65,7 @@ class RetrievalService:
         self.embed_model = settings.OLLAMA_EMBED_MODEL
         self.rerank_model = settings.CROSS_ENCODER_MODEL
         self.collection_name = settings.CHROMA_COLLECTION
+        self._web_search = WebSearchService(max_results=5)
         self._corpus: list[str] = []
         self._bm25:   Optional[BM25Okapi] = None
         self._stats = {
@@ -556,7 +558,12 @@ class RetrievalService:
                 chunks = self._rerank_with_cross_encoder(query, chunks, top_k)
 
                 
-                results = self._format_results(chunks)
+                local_results = self._format_results(chunks)
+
+                web_results = self._web_search(query)
+
+                results = local_results + web_results
+
 
                 latency = (time.time() - start) * 1000
                 self._update_stats(success=True, latency=latency, result_count=len(results))
@@ -566,8 +573,9 @@ class RetrievalService:
                     "status":       "success",
                     "latency_ms":   round(latency, 2),
                     "query":        query[:60],
+                    "local_count" : len(local_results),
+                    "web_count" : len(web_results) ,
                     "results_count": len(results),
-                    "top_score":    results[0]["score"] if results else 0,
                 })
 
                 return results

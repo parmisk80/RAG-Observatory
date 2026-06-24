@@ -11,7 +11,7 @@ import type { Citation, DocItem } from "./types"
 // ---------------------------------------------------------------------------
 
 const USE_MOCK = false
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://rag-api:8000"
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://172.20.10.7:8080"
 const API_BASE_PREFIX = "api/v1"
 
 // ── Types ──────────────────────────────────────────────────────────────────

@@ -1,6 +1,7 @@
 import ollama
 import logging
 import time
+from groq import Groq
 from typing import Optional
 from config.config import settings
 
@@ -35,8 +36,8 @@ class GenerationService:
     metrics used for performance tracking.
     """
     def __init__(self):
-        self.model = settings.OLLAMA_GENERATION_MODEL
-        self.base_url = settings.OLLAMA_BASE_URL
+        self.client = Groq(api_key=settings.GROQ_API_KEY)
+        self.model = settings.GROQ_MODEL
         self.max_tokens = settings.GENERATION_MAX_TOKEN
         self.temperature = settings.GENERATION_TEMPERATURE
         self._stats = {
@@ -151,22 +152,15 @@ class GenerationService:
     """
     def _generate_answer(self, prompt: str) -> str:
 
-        response = ollama.chat(
+        response = ollama.client.chat.completions.create(
             model    = self.model,
-            messages = [
-                {
-                    "role":    "user",
-                    "content": prompt,
-                }
-            ],
-            options  = {
-                "temperature": self.temperature,
-                "num_predict": self.max_tokens,
-                "top_p":       0.9,
-            },
-        )
+            messages = [{"role":    "user" , "content": prompt,}],
+            temperature = self.temperature ,
+            max_tokens = self.max_tokens)
+        
+        return response.choices[0].message.content.strip()
+            
 
-        return response["message"]["content"].strip()
     
 
     """
@@ -306,23 +300,17 @@ class GenerationService:
         results = {}
 
         try:
-            ollama.chat(
+            self.client.chat.completions.create(
                 model    = self.model,
                 messages = [{"role": "user", "content": "ping"}],
-                options  = {"num_predict": 1},
-            )
-            results["ollama"]         = "healthy"
-            results["model"]          = self.model
-            results["model_status"]   = "loaded"
+                max_tokens = 1)
+            
+            return {"service" : "generation" , "status" : "healthy" , "model" : self.model}
+        
 
         except Exception as exc:
-            results["ollama"]       = f"unhealthy: {exc}"
-            results["model_status"] = "unavailable"
-
-        overall          = "healthy" if "unhealthy" not in str(results.get("ollama", "")) else "unhealthy"
-        results["overall"] = overall
-
-        return results
+            logger.error(f"Groq health check failed : {exc}")
+            return {"service": "generation" , "status" : "unhealthy" , "error" : str(exc)}
     
 
     """
@@ -343,7 +331,6 @@ class GenerationService:
     def get_generation_stats(self) -> dict:
         total   = self._stats["total_generations"]
         failed  = self._stats["failed_generations"]
-        success = total - failed
 
         return {
             "total_generations":  total,
